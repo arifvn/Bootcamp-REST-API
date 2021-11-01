@@ -1,6 +1,7 @@
 const asyncHandler = require('../middlewares/asyncHandler');
 const ErrorResponse = require('../utils/ErrorResponse');
 const Bootcamp = require('../models/Bootcamp');
+const getLocation = require('../utils/getLocation');
 
 /*
  * @desc    Get all Bootcamp
@@ -8,9 +9,27 @@ const Bootcamp = require('../models/Bootcamp');
  * @access  Public
  */
 const getBootcamps = asyncHandler(async (req, res, _) => {
-  const bootcamps = await Bootcamp.find().populate('courses');
+  res.status(200).json(req.advanceResult);
+});
 
-  res
+/*
+ * @desc    Get Bootcamps within specific radius
+ * @route   DELETE /api/v1/bootcamps/radius/:zipcode/:distance
+ * @access  Private
+ */
+const getBootcampsInRadius = asyncHandler(async (req, res, next) => {
+  const { zipcode, distance } = req.params;
+
+  const location = await getLocation(zipcode);
+  const lat = location.latitude;
+  const lng = location.longitude;
+  const radius = distance / 3963;
+
+  const bootcamps = await Bootcamp.find({
+    location: { $geoWithin: { $centerSphere: [[lng, lat], radius] } },
+  });
+
+  return res
     .status(200)
     .json({ success: true, count: bootcamps.length, data: bootcamps });
 });
@@ -32,7 +51,10 @@ const createBootcamp = asyncHandler(async (req, res, _) => {
  * @access  Public
  */
 const getBootcamp = asyncHandler(async (req, res, next) => {
-  const bootcamp = await Bootcamp.findById(req.params.id);
+  const bootcamp = await Bootcamp.findById(req.params.id).populate(
+    'courses',
+    'title tuition'
+  );
 
   if (!bootcamp) {
     return next(
@@ -87,6 +109,7 @@ const deleteBootcamp = asyncHandler(async (req, res, next) => {
 
 module.exports = {
   getBootcamps,
+  getBootcampsInRadius,
   createBootcamp,
   getBootcamp,
   updateBootcamp,

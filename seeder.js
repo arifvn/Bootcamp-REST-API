@@ -27,12 +27,19 @@ const importData = async () => {
   }
 };
 
-const deleteData = async () => {
+const deleteData = async model => {
   try {
-    await Bootcamp.deleteMany();
-    await Course.deleteMany();
+    if (model) {
+      // eslint-disable-next-line no-eval
+      await eval(model).deleteMany();
 
-    console.log('Data deleted ...'.red.inverse);
+      console.log(`${model} deleted ...`.red.inverse);
+    } else {
+      await Bootcamp.deleteMany();
+      await Course.deleteMany();
+
+      console.log('Data deleted ...'.red.inverse);
+    }
   } catch (error) {
     console.log('Error Seeder', error.message.red);
   } finally {
@@ -43,5 +50,9 @@ const deleteData = async () => {
 if (process.argv[2] === '-i') {
   importData();
 } else if (process.argv[2] === '-d') {
-  deleteData();
+  if (process.argv[3]) {
+    deleteData(process.argv[3]);
+  } else {
+    deleteData();
+  }
 }

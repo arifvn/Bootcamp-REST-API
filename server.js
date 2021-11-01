@@ -17,6 +17,14 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/api/v1/bootcamps', bootcamps);
 app.use('/api/v1/courses', courses);
 
+// * Not found route
+app.use('*', (req, res) =>
+  res.status(404).json({
+    success: false,
+    error: `Address with path to ${req.originalUrl} not found`,
+  })
+);
+
 // * ErrorHandler
 app.use(errorHandler);
 

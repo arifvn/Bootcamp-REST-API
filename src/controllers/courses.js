@@ -10,8 +10,6 @@ const Course = require('../models/Course');
  * @access  Public
  */
 const getCourses = asyncHandler(async (req, res, next) => {
-  let courses;
-
   if (req.params.id) {
     const bootcamp = await Bootcamp.findById(req.params.id);
 
@@ -21,17 +19,17 @@ const getCourses = asyncHandler(async (req, res, next) => {
       );
     }
 
-    courses = await Course.find({ bootcamp: req.params.id }).populate(
+    const courses = await Course.find({ bootcamp: req.params.id }).populate(
       'bootcamp',
       'name description'
     );
-  } else {
-    courses = await Course.find().populate('bootcamp', 'name description');
+
+    return res
+      .status(200)
+      .json({ success: true, count: courses.length, data: courses });
   }
 
-  return res
-    .status(200)
-    .json({ success: true, count: courses.length, data: courses });
+  return res.status(200).json(req.advanceResult);
 });
 
 /*
