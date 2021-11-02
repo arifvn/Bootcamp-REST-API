@@ -22,7 +22,7 @@ router.post('/', createBootcamp);
 router.get('/:id', getBootcamp);
 router.put('/:id', updateBootcamp);
 router.delete('/:id', deleteBootcamp);
-router.delete('/:id/upload', uploadImageToBootcamp);
+router.put('/:id/upload', uploadImageToBootcamp);
 // Re-route to courses
 router.use('/:id/courses', courseRoute);
 
