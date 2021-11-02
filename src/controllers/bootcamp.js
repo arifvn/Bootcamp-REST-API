@@ -109,7 +109,7 @@ const deleteBootcamp = asyncHandler(async (req, res, next) => {
 });
 
 /*
- * @desc    Upload Image to Bootcamp
+ * @desc    Upload Image to Bootcamp by specifying the ID
  * @route   UPDATE /api/v1/bootcamps/:id/upload
  * @access  Private
  */
