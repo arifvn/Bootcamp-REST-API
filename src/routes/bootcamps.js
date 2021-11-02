@@ -12,7 +12,6 @@ const {
   getBootcamp,
   updateBootcamp,
   deleteBootcamp,
-  uploadImageToBootcamp,
 } = require('../controllers/bootcamp');
 
 router.get('/', advanceResult, getBootcamps);
@@ -22,7 +21,6 @@ router.post('/', createBootcamp);
 router.get('/:id', getBootcamp);
 router.put('/:id', updateBootcamp);
 router.delete('/:id', deleteBootcamp);
-router.put('/:id/upload', uploadImageToBootcamp);
 // Re-route to courses
 router.use('/:id/courses', courseRoute);
 

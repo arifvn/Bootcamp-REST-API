@@ -5,9 +5,6 @@ require('dotenv').config({ path: './src/config/config.env' });
 require('./src/config/db').connectToDB();
 
 const express = require('express');
-const fileUpload = require('express-fileupload');
-const path = require('path');
-
 const bootcamps = require('./src/routes/bootcamps');
 const courses = require('./src/routes/courses');
 const errorHandler = require('./src/middlewares/errorHandler');
@@ -15,10 +12,6 @@ const errorHandler = require('./src/middlewares/errorHandler');
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
-// FileUpload
-app.use(express.static(path.join(__dirname, 'src/public')));
-app.use(fileUpload());
 
 // * Routes
 app.use('/api/v1/bootcamps', bootcamps);
