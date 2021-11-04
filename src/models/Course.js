@@ -33,6 +33,11 @@ const CourseSchema = new mongoose.Schema({
     ref: 'Bootcamp',
     required: true,
   },
+  user: {
+    type: mongoose.Types.ObjectId,
+    ref: 'User',
+    required: true,
+  },
 });
 
 CourseSchema.statics.getAverageCost = async function (bootcampId) {
@@ -48,11 +53,15 @@ CourseSchema.statics.getAverageCost = async function (bootcampId) {
     },
   ]);
 
-  const averageCost = arr[0]
-    ? Math.ceil(arr[0].averageCost / 10) * 10
-    : undefined;
-
-  await this.model('Bootcamp').findByIdAndUpdate(bootcampId, { averageCost });
+  if (arr.length) {
+    await this.model('Bootcamp').findByIdAndUpdate(bootcampId, {
+      averageCost: Math.ceil(arr[0].averageCost / 10) * 10,
+    });
+  } else {
+    await this.model('Bootcamp').findByIdAndUpdate(bootcampId, {
+      averageCost: 0,
+    });
+  }
 };
 
 CourseSchema.post('save', async function () {

@@ -6,23 +6,39 @@ require('./src/config/db').connectToDB();
 
 const express = require('express');
 const path = require('path');
+const morgan = require('morgan');
 const fileUpload = require('express-fileupload');
+const cookieParser = require('cookie-parser');
 
 const bootcamps = require('./src/routes/bootcamps');
 const courses = require('./src/routes/courses');
+const auth = require('./src/routes/auth');
+const users = require('./src/routes/users');
+const reviews = require('./src/routes/reviews');
 const errorHandler = require('./src/middlewares/errorHandler');
 
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Logger
+if (process.env.NODE_ENV === 'development') {
+  app.use(morgan('dev'));
+}
+
 // FileUpload
 app.use(express.static(path.join(__dirname, 'src/public')));
 app.use(fileUpload());
 
+// CookieParser
+app.use(cookieParser());
+
 // * Routes
 app.use('/api/v1/bootcamps', bootcamps);
 app.use('/api/v1/courses', courses);
+app.use('/api/v1/auth', auth);
+app.use('/api/v1/auth/users', users);
+app.use('/api/v1/reviews', reviews);
 
 // * Not found route
 app.use('*', (req, res) =>

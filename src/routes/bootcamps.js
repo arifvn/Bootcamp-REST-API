@@ -1,10 +1,12 @@
 const router = require('express').Router();
 const courseRoute = require('./courses');
+const reviewRoute = require('./reviews');
 const Bootcamp = require('../models/Bootcamp');
 const advanceResult = require('../middlewares/advanceResult')(
   Bootcamp,
   'courses'
 );
+const { protect, authorize } = require('../middlewares/auth');
 const {
   getBootcamps,
   getBootcampsInRadius,
@@ -17,13 +19,15 @@ const {
 
 router.get('/', advanceResult, getBootcamps);
 router.get('/radius/:zipcode/:distance', getBootcampsInRadius);
-router.post('/', createBootcamp);
-
 router.get('/:id', getBootcamp);
+router.use('/:id/courses', courseRoute); // Re-route to courses
+router.use('/:id/reviews', reviewRoute); // Re-route to reviews
+
+router.use(protect, authorize('publisher', 'admin'));
+
+router.post('/', createBootcamp);
 router.put('/:id', updateBootcamp);
 router.delete('/:id', deleteBootcamp);
 router.put('/:id/upload', uploadImageToBootcamp);
-// Re-route to courses
-router.use('/:id/courses', courseRoute);
 
 module.exports = router;

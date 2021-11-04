@@ -41,32 +41,3 @@ const errorHandler = (err, req, res, next) => {
 };
 
 module.exports = errorHandler;
-
-const err = {
-  title: {
-    name: 'ValidatorError',
-    message: 'Please add a title',
-    properties: {
-      message: 'Please add a title',
-      type: 'required',
-      path: 'title',
-      value: '',
-    },
-    kind: 'required',
-    path: 'title',
-    value: '',
-  },
-  tuition: {
-    name: 'ValidatorError',
-    message: 'Please add a title',
-    properties: {
-      message: 'Please add a title',
-      type: 'required',
-      path: 'title',
-      value: '',
-    },
-    kind: 'required',
-    path: 'title',
-    value: '',
-  },
-};

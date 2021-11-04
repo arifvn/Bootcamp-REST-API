@@ -7,7 +7,6 @@ const BootcampSchema = new mongoose.Schema(
     name: {
       type: String,
       required: [true, 'Please add a name'],
-      unique: [true, 'Name has already been used'],
       trim: true,
       maxlength: [50, 'Name can not be more than 50 characters'],
     },
@@ -96,6 +95,11 @@ const BootcampSchema = new mongoose.Schema(
     createdAt: {
       type: Date,
       default: Date.now,
+    },
+    user: {
+      type: mongoose.Types.ObjectId,
+      ref: 'User',
+      required: true,
     },
   },
   {

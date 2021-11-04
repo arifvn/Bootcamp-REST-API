@@ -46,10 +46,22 @@ const createCourse = asyncHandler(async (req, res, next) => {
     );
   }
 
+  const userID = req.user._id.toString();
+
+  if (bootcamp.user.toString() !== userID && req.user.role !== 'admin') {
+    return next(
+      new ErrorResponse(
+        `User with id of ${userID} is not autorized to create Course in this Bootcamp`,
+        403
+      )
+    );
+  }
+
   req.body.bootcamp = req.params.id;
+  req.body.user = userID;
   const course = await Course.create(req.body);
 
-  return res.status(200).json({ success: true, data: course });
+  return res.status(201).json({ success: true, data: course });
 });
 
 /*
@@ -83,6 +95,17 @@ const updateCourse = asyncHandler(async (req, res, next) => {
     );
   }
 
+  const userID = req.user._id.toString();
+
+  if (course.user.toString() !== userID && req.user.role !== 'admin') {
+    return next(
+      new ErrorResponse(
+        `User with id of ${userID} is not autorized to update this Course`,
+        403
+      )
+    );
+  }
+
   course = await Course.findByIdAndUpdate(req.params.id, req.body, {
     new: true,
     runValidators: true,
@@ -105,7 +128,18 @@ const deleteCourse = asyncHandler(async (req, res, next) => {
     );
   }
 
-  course.remove();
+  const userID = req.user._id.toString();
+
+  if (course.user.toString() !== userID && req.user.role !== 'admin') {
+    return next(
+      new ErrorResponse(
+        `User with id of ${userID} is not autorized to delete this Course`,
+        403
+      )
+    );
+  }
+
+  await course.remove();
 
   return res.status(200).json({ success: true, data: {} });
 });
