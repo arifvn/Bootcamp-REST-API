@@ -52,7 +52,7 @@ ReviewSchema.statics.getAverageRating = async function (bootcampId) {
 
   if (arr.length) {
     await this.model('Bootcamp').findByIdAndUpdate(bootcampId, {
-      averageRating: Math.ceil(arr[0].averageRating / 10) * 10,
+      averageRating: arr[0].averageRating.toFixed(1),
     });
   } else {
     await this.model('Bootcamp').findByIdAndUpdate(bootcampId, {

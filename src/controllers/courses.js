@@ -111,7 +111,7 @@ const updateCourse = asyncHandler(async (req, res, next) => {
     runValidators: true,
   });
 
-  course.save();
+  await course.save();
 
   return res.status(200).json({ success: true, data: course });
 });

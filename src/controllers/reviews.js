@@ -100,7 +100,7 @@ const updateReview = asyncHandler(async (req, res, next) => {
     runValidators: true,
   });
 
-  review.save();
+  await review.save();
 
   return res.status(200).json({ success: true, data: review });
 });

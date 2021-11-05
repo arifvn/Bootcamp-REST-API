@@ -85,7 +85,7 @@ const getBootcamp = asyncHandler(async (req, res, next) => {
  * @access  Private
  */
 const updateBootcamp = asyncHandler(async (req, res, next) => {
-  const bootcamp = await Bootcamp.findById(req.params.id);
+  let bootcamp = await Bootcamp.findById(req.params.id);
 
   if (!bootcamp) {
     return next(
@@ -104,13 +104,14 @@ const updateBootcamp = asyncHandler(async (req, res, next) => {
     );
   }
 
-  const newBootcamp = await Bootcamp.findByIdAndUpdate(
-    req.params.id,
-    req.body,
-    { new: true, runValidators: true }
-  );
+  bootcamp = await Bootcamp.findByIdAndUpdate(req.params.id, req.body, {
+    new: true,
+    runValidators: true,
+  });
 
-  return res.status(200).json({ success: true, data: newBootcamp });
+  await bootcamp.save({ validateBeforeSave: false });
+
+  return res.status(200).json({ success: true, data: bootcamp });
 });
 
 /*
