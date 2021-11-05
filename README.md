@@ -2,6 +2,8 @@
 
 > Backend REST API for DevCamper Application
 
+## Usage
+
 Rename `"src/config/config.env.env"` to `"config/config.env"` and update the values/settings to your own
 
 ## Install Dependencies
