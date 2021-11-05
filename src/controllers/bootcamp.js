@@ -48,7 +48,8 @@ const createBootcamp = asyncHandler(async (req, res, next) => {
   if (bootcamps.length && req.user.role !== 'admin') {
     return next(
       new ErrorResponse(
-        `User with id of ${userID} has already created Bootcamp`
+        `User with id of ${userID} has already created Bootcamp`,
+        400
       )
     );
   }

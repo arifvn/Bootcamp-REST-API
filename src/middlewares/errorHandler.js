@@ -10,13 +10,13 @@ const errorHandler = (err, req, res, next) => {
     err.message.toString().startsWith('Cast to ObjectId failed')
   ) {
     error = new ErrorResponse(`Resource not found`, 400);
-  }
-
-  if (
+  } else if (
     err.name === 'CastError' &&
     err.message.toString().startsWith('Cast to Number failed')
   ) {
     error = new ErrorResponse(`Field must be type of Number`, 400);
+  } else if (err.name === 'CastError') {
+    error = new ErrorResponse(`Resource not found`, 400);
   }
 
   // Validation Error
@@ -33,6 +33,10 @@ const errorHandler = (err, req, res, next) => {
       )} is already exist`,
       400
     );
+
+    if (error.message.includes(`Property bootcamp,user`)) {
+      error = new ErrorResponse(`You have already submitted a review`, 400);
+    }
   }
 
   return res

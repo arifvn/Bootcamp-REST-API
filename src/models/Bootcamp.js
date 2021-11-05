@@ -114,21 +114,26 @@ BootcampSchema.pre('save', function (next) {
 });
 
 BootcampSchema.pre('save', async function (next) {
-  const location = await getLocation(this.address);
+  try {
+    const location = await getLocation(this.address);
 
-  this.location = {
-    type: 'Point',
-    coordinates: [location.longitude, location.latitude],
-    formattedAddress: location.formattedAddress,
-    street: location.streetName,
-    city: location.city,
-    state: location.stateCode,
-    zipcode: location.zipcode,
-    country: location.countryCode,
-  };
+    this.location = {
+      type: 'Point',
+      coordinates: [location.longitude, location.latitude],
+      formattedAddress: location.formattedAddress,
+      street: location.streetName,
+      city: location.city,
+      state: location.stateCode,
+      zipcode: location.zipcode,
+      country: location.countryCode,
+    };
 
-  this.address = undefined;
-  next();
+    this.address = undefined;
+    next();
+  } catch (error) {
+    console.log('Error getting location ...'.red.inverse);
+    next();
+  }
 });
 
 BootcampSchema.virtual('courses', {
@@ -138,8 +143,16 @@ BootcampSchema.virtual('courses', {
   justOne: false,
 });
 
+BootcampSchema.virtual('reviews', {
+  ref: 'Review',
+  localField: '_id',
+  foreignField: 'bootcamp',
+  justOne: false,
+});
+
 BootcampSchema.pre('remove', async function (next) {
   await this.model('Course').deleteMany({ bootcamp: this._id });
+  await this.model('Review').deleteMany({ bootcamp: this._id });
 
   console.log(`Courses has been removed from bootcamp ${this._id}`.red.inverse);
   next();

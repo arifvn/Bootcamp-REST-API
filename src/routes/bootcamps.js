@@ -4,7 +4,8 @@ const reviewRoute = require('./reviews');
 const Bootcamp = require('../models/Bootcamp');
 const advanceResult = require('../middlewares/advanceResult')(
   Bootcamp,
-  'courses'
+  'courses',
+  { path: 'reviews', select: '-_id -__v -createdAt' }
 );
 const { protect, authorize } = require('../middlewares/auth');
 const {
